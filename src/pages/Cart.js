@@ -6,9 +6,11 @@ export default class Cart extends React.Component {
     return (
       <div>
         <Header />
-        <h2 data-testid="shopping-cart-empty-message">
-          Seu carrinho está vazio
-        </h2>
+        <div className="container">
+          <h2 data-testid="shopping-cart-empty-message">
+            Seu carrinho está vazio
+          </h2>
+        </div>
       </div>
     );
   }
