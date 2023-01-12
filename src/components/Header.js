@@ -6,11 +6,20 @@ import logo from '../assets/logo.png';
 
 export default class Header extends React.Component {
   render() {
-    const { search: { searchTerm, handleChange, handleSubmit } } = this.props;
+    const {
+      search: {
+        searchTerm,
+        handleChange,
+        handleSubmit,
+      },
+      categorias: {
+        setSelectedCategory,
+      },
+    } = this.props;
 
     return (
       <header className="header">
-        <Link to="/">
+        <Link to="/" onClick={ () => setSelectedCategory('') }>
           <img src={ logo } alt="Logotipo" className="logo" />
         </Link>
         <form onSubmit={ handleSubmit }>
@@ -35,5 +44,8 @@ Header.propTypes = {
     searchTerm: PropTypes.string,
     handleChange: PropTypes.func,
     handleSubmit: PropTypes.func,
+  }).isRequired,
+  categorias: PropTypes.shape({
+    setSelectedCategory: PropTypes.func,
   }).isRequired,
 };
