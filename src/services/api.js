@@ -8,14 +8,16 @@ export async function getCategories() {
   return data;
 }
 
-export async function getProductsFromCategoryAndQuery(categoryId, query) {
-  const endpoint = `https://api.mercadolibre.com/sites/MLB/search?category=${categoryId}&q=${query}`;
+export async function getProductsFromCategoryAndQuery(categoryId, searchTerm) {
+  const endpoint = `https://api.mercadolibre.com/sites/MLB/search?category=${categoryId}&q=${searchTerm}`;
 
-  const response = await fetch(endpoint);
-
-  const data = await response.json();
-
-  return data;
+  try {
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    return [];
+  }
 }
 
 export async function getProductById(productId) {
