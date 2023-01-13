@@ -4,6 +4,7 @@ import { getCategories, getProductsFromCategoryAndQuery } from './services/api';
 import Home from './pages/Home';
 import Cart from './pages/Cart';
 import './App.css';
+import getSearchParam from './helpers';
 
 class App extends React.Component {
   state = {
@@ -19,17 +20,15 @@ class App extends React.Component {
     categorias: {
       data: [],
       isLoading: true,
+      selectedCategory: '',
+      setSelectedCategory: () => {},
     },
-    // produtos: {
-    //   data: {
-    //     results: [],
-    //   },
-    //   isLoading: false,
-    // },
   };
 
   componentDidMount() {
+    // buscar categorias disponíveis
     this.fetchCategorias();
+    // atualizar estados
     this.setState((currentState) => ({
       ...currentState,
       search: {
@@ -37,7 +36,16 @@ class App extends React.Component {
         handleChange: this.handleChange,
         handleSubmit: this.handleSubmit,
       },
+      categorias: {
+        ...currentState.categorias,
+        selectedCategory: getSearchParam('category') ?? '',
+        setSelectedCategory: this.setSelectedCategory,
+      },
     }));
+    // pesquisar por itens da categoria selecionada
+    if ((getSearchParam('category').trim() ?? '') !== '') {
+      this.fetchProducts(getSearchParam('category'), '');
+    }
   }
 
   handleChange = (e) => {
@@ -62,6 +70,7 @@ class App extends React.Component {
     this.setState((currentState) => ({
       ...currentState,
       categorias: {
+        ...currentState.categorias,
         data,
         isLoading: false,
       },
@@ -90,10 +99,21 @@ class App extends React.Component {
     }));
   };
 
+  setSelectedCategory = (categoryId) => {
+    this.setState((currentState) => ({
+      ...currentState,
+      categorias: {
+        ...currentState.categorias,
+        selectedCategory: categoryId,
+      },
+    }));
+    this.fetchProducts(categoryId, '');
+  };
+
   render() {
     return (
       <Switch>
-        <Route path="/cart" component={ Cart } />
+        <Route path="/cart" render={ () => <Cart { ...this.state } /> } />
         <Route exact path="/" render={ () => <Home { ...this.state } /> } />
       </Switch>
     );

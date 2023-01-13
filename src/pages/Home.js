@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Card from '../components/Card';
 
 class Home extends React.Component {
   render() {
     const {
-      categorias: { data, isLoading },
+      categorias: { data, isLoading, setSelectedCategory },
       search: { data: { results }, isLoading: isLoadingProducts },
     } = this.props;
 
@@ -23,7 +24,13 @@ class Home extends React.Component {
                 isLoading
                   ? <li>Carregando...</li>
                   : data.map(({ id, name }) => (
-                    <li data-testid="category" key={ id }>{name}</li>
+                    <Link
+                      to={ `/?category=${id}` }
+                      key={ id }
+                      onClick={ () => setSelectedCategory(id) }
+                    >
+                      <li data-testid="category">{ name }</li>
+                    </Link>
                   ))
               }
             </ul>
@@ -55,6 +62,7 @@ Home.propTypes = {
       id: PropTypes.string,
       name: PropTypes.string,
     })),
+    setSelectedCategory: PropTypes.func,
     isLoading: PropTypes.bool,
   }).isRequired,
   search: PropTypes.shape({
