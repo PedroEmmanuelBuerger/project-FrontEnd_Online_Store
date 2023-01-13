@@ -5,17 +5,18 @@ import Home from './pages/Home';
 import Cart from './pages/Cart';
 import './App.css';
 import getSearchParam from './helpers';
+import Product from './pages/Product';
 
 class App extends React.Component {
   state = {
     search: {
-      searchTerm: '',
-      handleChange: () => {},
-      handleSubmit: () => {},
-      isLoading: false,
       data: {
         results: [],
       },
+      isLoading: false,
+      searchTerm: '',
+      handleChange: () => {},
+      handleSubmit: () => {},
     },
     categorias: {
       data: [],
@@ -28,7 +29,7 @@ class App extends React.Component {
   componentDidMount() {
     // buscar categorias disponíveis
     this.fetchCategorias();
-    // atualizar estados
+    // atualização inicial de estados
     this.setState((currentState) => ({
       ...currentState,
       search: {
@@ -38,13 +39,13 @@ class App extends React.Component {
       },
       categorias: {
         ...currentState.categorias,
-        selectedCategory: getSearchParam('category') ?? '',
+        selectedCategory: getSearchParam('category'),
         setSelectedCategory: this.setSelectedCategory,
       },
     }));
     // pesquisar por itens da categoria selecionada
-    if ((getSearchParam('category').trim() ?? '') !== '') {
-      this.fetchProducts(getSearchParam('category'), '');
+    if (getSearchParam('category').trim() !== '') {
+      this.fetchProducts(getSearchParam('category'));
     }
   }
 
@@ -77,7 +78,7 @@ class App extends React.Component {
     }));
   };
 
-  fetchProducts = async (categoryId, searchTerm) => {
+  fetchProducts = async (categoryId, searchTerm = '') => {
     // definir estado de carregamento dos produtos como true
     this.setState((currentState) => ({
       ...currentState,
@@ -107,13 +108,17 @@ class App extends React.Component {
         selectedCategory: categoryId,
       },
     }));
-    this.fetchProducts(categoryId, '');
+    this.fetchProducts(categoryId);
   };
 
   render() {
     return (
       <Switch>
         <Route path="/cart" render={ () => <Cart { ...this.state } /> } />
+        <Route
+          path="/product/:id"
+          render={ (props) => <Product { ...props } { ...this.state } /> }
+        />
         <Route exact path="/" render={ () => <Home { ...this.state } /> } />
       </Switch>
     );
