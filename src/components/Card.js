@@ -7,11 +7,13 @@ export default class Card extends React.Component {
     const { id, title, thumbnail, price } = this.props;
 
     return (
-      <div data-testid="product" className="product-card">
-        <Link to={ `/product/${id}` }>
+      <div  className="product-card" data-testid="product">
+        <Link 
+        data-testid="product-detail-link" 
+        to={ `/product/${id}` }>
           <img src={ thumbnail } alt={ title } />
         </Link>
-        <Link to={ `/product/${id}` }>
+        <Link  to={ `/product/${id}` }>
           <h3>{ title }</h3>
         </Link>
         <div className="product-price">
