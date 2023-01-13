@@ -1,14 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 export default class Card extends React.Component {
   render() {
-    const { title, thumbnail, price } = this.props;
+    const { id, title, thumbnail, price } = this.props;
 
     return (
       <div data-testid="product" className="product-card">
-        <img src={ thumbnail } alt={ title } />
-        <h3>{ title }</h3>
+        <Link to={ `/product/${id}` }>
+          <img src={ thumbnail } alt={ title } />
+        </Link>
+        <Link to={ `/product/${id}` }>
+          <h3>{ title }</h3>
+        </Link>
         <div className="product-price">
           <span className="currency">
             R$
@@ -26,7 +31,7 @@ export default class Card extends React.Component {
 }
 
 Card.propTypes = {
-  // id: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   thumbnail: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
