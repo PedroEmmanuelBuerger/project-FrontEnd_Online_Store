@@ -25,9 +25,10 @@ export default class Cart extends React.Component {
         <Header { ...this.props } />
         <div className="container">
           <h2 data-testid="shopping-cart-empty-message">
-            { produtos.map((result) => <Shopping key={ result.id } { ...result } />) }
+            { produtos.length === 0 && 'Seu carrinho está vazio'}
           </h2>
-          <Shopping />
+          { produtos.map((result) => <Shopping key={ result.id } { ...result } />) }
+
         </div>
       </div>
     );
