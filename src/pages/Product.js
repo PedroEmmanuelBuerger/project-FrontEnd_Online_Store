@@ -20,7 +20,20 @@ class Product extends React.Component {
     }));
   };
 
+  addCart = () => {
+    const { data } = this.state;
+    const local = localStorage.getItem('cart');
+    if (local) {
+      const arr = JSON.parse(local);
+      const novoLocal = [...arr, data];
+      localStorage.setItem('cart', JSON.stringify(novoLocal));
+    } else {
+      localStorage.setItem('cart', JSON.stringify([data]));
+    }
+  };
+
   render() {
+    const { history } = this.props;
     const { isLoading, data } = this.state;
     return (
       <div>
@@ -37,7 +50,11 @@ class Product extends React.Component {
               <span data-testid="product-detail-price">{ data.price }</span>
               <button
                 type="button"
-                data-testid="shopping-cart-button"
+                data-testid="product-detail-add-to-cart"
+                onClick={ () => {
+                  this.addCart();
+                  history.push('/Cart');
+                } }
               >
                 Adicionar ao carrinho
               </button>
@@ -53,6 +70,9 @@ Product.propTypes = {
     params: PropTypes.shape({
       id: PropTypes.string,
     }),
+  }).isRequired,
+  history: PropTypes.shape({ push: PropTypes.func,
+
   }).isRequired,
 };
 export default Product;
