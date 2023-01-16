@@ -3,6 +3,27 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 export default class Card extends React.Component {
+  addToCart = () => {
+    let produtoAtual = { ...this.props };
+    produtoAtual.quantidade = 1;
+    const local = localStorage.getItem('cart');
+    if (local) {
+      const arr = JSON.parse(local);
+      const elementoExistente = arr.find((element) => element.id === produtoAtual.id);
+      if (elementoExistente) {
+        elementoExistente.quantidade += 1;
+        produtoAtual = elementoExistente;
+        const carrinhoFiltrado = arr.filter((element) => element.id !== produtoAtual.id);
+        return localStorage
+          .setItem('cart', JSON.stringify([...carrinhoFiltrado, produtoAtual]));
+      }
+      const novoLocal = [...arr, produtoAtual];
+      localStorage.setItem('cart', JSON.stringify(novoLocal));
+    } else {
+      localStorage.setItem('cart', JSON.stringify([produtoAtual]));
+    }
+  };
+
   render() {
     const { id, title, thumbnail, price } = this.props;
 
@@ -22,7 +43,11 @@ export default class Card extends React.Component {
             { price }
           </span>
         </div>
-        <button type="button">
+        <button
+          type="button"
+          data-testid="product-add-to-cart"
+          onClick={ this.addToCart }
+        >
           Adicionar ao carrinho
         </button>
       </div>
@@ -35,4 +60,8 @@ Card.propTypes = {
   title: PropTypes.string.isRequired,
   thumbnail: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
+  quantidade: PropTypes.number,
+};
+Card.defaultProps = {
+  quantidade: 0,
 };
