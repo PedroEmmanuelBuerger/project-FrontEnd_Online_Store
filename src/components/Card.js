@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 export default class Card extends React.Component {
   addToCart = () => {
     let produtoAtual = { ...this.props };
-    produtoAtual.quantidade = 1;
+    const { quantidade } = this.props;
+    produtoAtual.quantidade = quantidade;
     const local = localStorage.getItem('cart');
     if (local) {
       const arr = JSON.parse(local);
@@ -63,5 +64,5 @@ Card.propTypes = {
   quantidade: PropTypes.number,
 };
 Card.defaultProps = {
-  quantidade: 0,
+  quantidade: 1,
 };
