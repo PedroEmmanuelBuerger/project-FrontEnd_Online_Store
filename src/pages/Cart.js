@@ -9,14 +9,18 @@ export default class Cart extends React.Component {
   };
 
   componentDidMount() {
-    const data = localStorage.getItem('cart');
-    if (data) {
-      const produtos = JSON.parse(data);
+    this.pegaCarrinhoLsg();
+  }
+
+  pegaCarrinhoLsg = () => {
+    const carrinhoLsg = localStorage.getItem('cart');
+    if (carrinhoLsg) {
+      const data = JSON.parse(carrinhoLsg);
       this.setState({
-        produtos,
+        produtos: data,
       });
     }
-  }
+  };
 
   render() {
     const { produtos } = this.state;
@@ -27,7 +31,12 @@ export default class Cart extends React.Component {
           <h2 data-testid="shopping-cart-empty-message">
             { produtos.length === 0 && 'Seu carrinho está vazio'}
           </h2>
-          { produtos.map((result) => <Shopping key={ result.id } { ...result } />) }
+          { produtos.map((result) => (
+            <Shopping
+              key={ result.id }
+              { ...result }
+              atualizarCarrinho={ this.pegaCarrinhoLsg }
+            />)) }
 
         </div>
       </div>
