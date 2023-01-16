@@ -13,6 +13,7 @@ class Product extends React.Component {
 
   buscarProduto = async (id) => {
     const data = await getProductById(id);
+    data.quantidade = 1;
     this.setState((currentState) => ({
       ...currentState,
       isLoading: false,
@@ -20,15 +21,26 @@ class Product extends React.Component {
     }));
   };
 
-  addCart = () => {
+  addToCart = () => {
     const { data } = this.state;
+    let produtoAtual = { ...data };
+    const { quantidade } = data;
+    produtoAtual.quantidade = quantidade;
     const local = localStorage.getItem('cart');
     if (local) {
       const arr = JSON.parse(local);
-      const novoLocal = [...arr, data];
+      const elementoExistente = arr.find((element) => element.id === produtoAtual.id);
+      if (elementoExistente) {
+        elementoExistente.quantidade += 1;
+        produtoAtual = elementoExistente;
+        const carrinhoFiltrado = arr.filter((element) => element.id !== produtoAtual.id);
+        return localStorage
+          .setItem('cart', JSON.stringify([...carrinhoFiltrado, produtoAtual]));
+      }
+      const novoLocal = [...arr, produtoAtual];
       localStorage.setItem('cart', JSON.stringify(novoLocal));
     } else {
-      localStorage.setItem('cart', JSON.stringify([data]));
+      localStorage.setItem('cart', JSON.stringify([produtoAtual]));
     }
   };
 
@@ -52,7 +64,7 @@ class Product extends React.Component {
                 type="button"
                 data-testid="product-detail-add-to-cart"
                 onClick={ () => {
-                  this.addCart();
+                  this.addToCart();
                   history.push('/Cart');
                 } }
               >

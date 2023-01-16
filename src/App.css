@@ -141,3 +141,9 @@ body {
 .home .content .product-card button:hover {
   background-color: #00ab41;
 }
+
+.cartProductContainer {
+  align-items: center;
+  display: flex;
+  gap: 20px;
+}
